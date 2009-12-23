@@ -1,6 +1,6 @@
-= GIT 'ER BUP
+= GIT 'R BACKUP
 
-GIT 'ER BUP is a simple utility for backing up your Rails apps.
+GIT 'R BACKUP is a simple utility for backing up your Rails apps.
 
 
 == Why back up to Git?
