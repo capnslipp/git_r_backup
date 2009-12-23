@@ -1,0 +1,8 @@
+= GIT 'ER BUP
+
+GIT 'ER BUP is a simple utility for backing up your Rails apps.
+
+
+== Why back up to Git?
+
+Why not? It's fast, it's efficient, it's versioned, it's distributed, and it's compressed. Seriously, why wouldn't you want to?
