@@ -4,7 +4,7 @@ require 'iconv'
 class GitRBackup
   VERSION = '1.0.0'
   
-  PARTS = [:server, :app, :environment]
+  PARTS = [:server, :instance, :environment]
   
   
 protected
