@@ -6,18 +6,21 @@ class GitRBackup
   
   PARTS = [:server, :app, :environment]
   
-  def backup(options = {})
+  
+protected
+  
+  def subdir_name(options = {})
     subdir_parts = []
     
     PARTS.each do |p_opt|
       subdir_parts << filenameize(options[p_opt]) if options[p_opt]
     end
     
+    return nil if subdir_parts.empty?
+    
     subdir_parts.join('.')
   end
   
-  
-protected
   
   # stolen and modified from ActiveSupport::Inflector
   def filenameize(string)
