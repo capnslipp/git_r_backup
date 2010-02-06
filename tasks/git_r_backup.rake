@@ -42,7 +42,7 @@ namespace :git_r_backup do
   end
   
   def sub_dir
-    trail_slash(ENV['SUB'])
+    trail_slash(ENV['SUB']) if ENV['SUB']
   end
   
   def app_dir
