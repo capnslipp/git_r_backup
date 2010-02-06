@@ -4,7 +4,7 @@ namespace :git_r_backup do
     git_r_backup = GitRBackup.new(
       :base => base_dir,
       :cache => cache_dir,
-      :sub => sub_name,
+      :sub => sub_dir,
       :app => app_dir
     )
   end
@@ -14,13 +14,21 @@ namespace :git_r_backup do
     git_r_backup = GitRBackup.new(
       :base => base_dir,
       :cache => cache_dir,
-      :sub => sub_name,
+      :sub => sub_dir,
       :assets => assets_dir
     )
   end
   
   desc "Back up the database and assets."
-  task :all => [:db, :assets]
+  task :all => :environment do
+    git_r_backup = GitRBackup.new(
+      :base => base_dir,
+      :cache => cache_dir,
+      :sub => sub_dir,
+      :app => app_dir,
+      :assets => assets_dir
+    )
+  end
   
   
   
@@ -33,7 +41,7 @@ namespace :git_r_backup do
     trail_slash(ENV['CACHE'])
   end
   
-  def sub_name
+  def sub_dir
     trail_slash(ENV['SUB'])
   end
   
