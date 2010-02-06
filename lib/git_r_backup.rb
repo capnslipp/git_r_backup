@@ -13,10 +13,10 @@ class GitRBackup
     @app_path = File.join(options[:base], options[:app]) if options[:app]
     @assets_path = File.join(options[:base], options[:assets]) if options[:assets]
     
-    puts "cache dir:\t#{@cache_path}"
-    puts "sub name:\t#{@sub_name}"
-    puts "app path:\t#{@app_path}" if @app_path
-    puts "assets path:\t#{@assets_path}" if @assets_path
+    puts "cache dir:\t#{@cache_path.inspect}"
+    puts "sub name:\t#{@sub_name.inspect}" if @sub_name
+    puts "app path:\t#{@app_path.inspect}" if @app_path
+    puts "assets path:\t#{@assets_path.inspect}" if @assets_path
   end
   
   
