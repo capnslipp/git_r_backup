@@ -7,6 +7,19 @@ class GitRBackup
   PARTS = [:server, :instance, :environment]
   
   
+  def initialize(options)
+    @cache_path = File.join(options[:base], options[:cache])
+    @sub_name = options[:sub]
+    @app_path = File.join(options[:base], options[:app]) if options[:app]
+    @assets_path = File.join(options[:base], options[:assets]) if options[:assets]
+    
+    puts "cache dir:\t#{@cache_path}"
+    puts "sub name:\t#{@sub_name}"
+    puts "app path:\t#{@app_path}" if @app_path
+    puts "assets path:\t#{@assets_path}" if @assets_path
+  end
+  
+  
   def backup(app_path, backup_repo_path, options = {})
     decide_paths(app_path, backup_repo_path, options)
   end
