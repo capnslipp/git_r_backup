@@ -1,6 +1,3 @@
-require 'iconv'
-
-
 class GitRBackup
   VERSION = '1.0.0'
   
