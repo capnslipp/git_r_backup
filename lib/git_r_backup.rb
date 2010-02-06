@@ -9,12 +9,12 @@ class GitRBackup
   
   def initialize(options)
     @cache_path = File.join(options[:base], options[:cache])
-    @sub_name = options[:sub]
+    @sub_dir = File.join(@cache_path, options[:sub])
     @app_path = File.join(options[:base], options[:app]) if options[:app]
     @assets_path = File.join(options[:base], options[:assets]) if options[:assets]
     
     puts "cache dir:\t#{@cache_path.inspect}"
-    puts "sub name:\t#{@sub_name.inspect}" if @sub_name
+    puts "sub dir:\t#{@sub_dir.inspect}" if @sub_dir
     puts "app path:\t#{@app_path.inspect}" if @app_path
     puts "assets path:\t#{@assets_path.inspect}" if @assets_path
   end
