@@ -26,7 +26,7 @@ describe GitRBackup do
     {
       :base => '.',
       :cache => 'tmp/backup_cache',
-      :assets => 'public/asserts'
+      :assets => 'public/assets'
     }
   end
   
@@ -63,23 +63,42 @@ describe GitRBackup do
   describe "correct instance variables" do
     
     it "backup_cache_repo_dir" do
-      grb = GitRBackup.new(std_args)
+      grb = GitRBackup.new std_args
+      grb.instance_variable_get(:@backup_cache_repo_dir).should == './tmp/backup_cache'
     end
     
     it "backup_cache_sub_dir" do
-      grb = GitRBackup.new(std_args)
+      grb = GitRBackup.new std_args
+      grb.instance_variable_get(:@backup_cache_sub_dir).should be_nil
+      
+      grb = GitRBackup.new std_args.merge({:sub => 'servername.appinstance.environment'})
+      # assuming @backup_cache_repo_dir == './tmp/backup_cache'
+      grb.instance_variable_get(:@backup_cache_sub_dir).should == './tmp/backup_cache/servername.appinstance.environment'
     end
     
     it "app_dir" do
-      grb = GitRBackup.new(std_args)
-    end
-    
-    it "app_assets_dir" do
-      grb = GitRBackup.new(std_args)
+      grb = GitRBackup.new std_args
+      grb.instance_variable_get(:@app_dir).should be_nil
+      
+      grb = GitRBackup.new db_args
+      ['.', './.'].should be_include(grb.instance_variable_get(:@app_dir))
     end
     
     it "app_db_dump_path" do
-      grb = GitRBackup.new(std_args)
+      grb = GitRBackup.new std_args
+      grb.instance_variable_get(:@app_db_dump_path).should be_nil
+      
+      grb = GitRBackup.new db_args
+      # assuming @app_dir is '.' or './.'
+      ['./db/data.yml', '././db/data.yml'].should be_include(grb.instance_variable_get(:@app_db_dump_path))
+    end
+    
+    it "assets_dir" do
+      grb = GitRBackup.new std_args
+      grb.instance_variable_get(:@assets_dir).should be_nil
+      
+      grb = GitRBackup.new assets_args
+      grb.instance_variable_get(:@assets_dir).should == './public/assets'
     end
     
   end
