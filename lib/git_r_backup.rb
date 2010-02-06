@@ -7,9 +7,27 @@ class GitRBackup
   PARTS = [:server, :instance, :environment]
   
   
+  def backup(app_path, backup_repo_path, options = {})
+    decide_paths(app_path, backup_repo_path, options)
+  end
+  
+  
 protected
   
-  def subdir_name(options = {})
+  def decide_paths(app_path, backup_repo_path, options)
+    if backup_subdir = subdir_name(options)
+      @backup_path = File.join(backup_repo_path, backup_subdir)
+    else
+      @backup_path = backup_repos_path
+    end
+    
+    @app_data_path = File.join(app_path, 'db', 'data.yml') unless options[:skip_db]
+    
+    @app_asset_path = File.join([app_path] + [options[:asset_dir]]) if options[:asset_dir]
+  end
+  
+  
+  def subdir_name(options)
     subdir_parts = []
     
     PARTS.each do |p_opt|

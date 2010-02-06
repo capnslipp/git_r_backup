@@ -3,6 +3,12 @@ require "git_r_backup"
 
 class TestGitRBackup < Test::Unit::TestCase
   
+  def test_decide_paths
+    grb = GitRBackup.new
+    grb.send(:decide_paths, '/www/clutterapp/current', '/www/clutterapp/shared/backup')
+    assert_equal '',  grb.instance_variable_get(:@backup_path)
+  end
+  
   def test_subdir_name
     grb = GitRBackup.new
     
