@@ -48,4 +48,9 @@ namespace :git_r_backup do
   def app_dir
     ENV['APP'] || '.'
   end
+  
+  def assets_dir
+    raise "ASSETS='…' is required" unless ENV['ASSETS'].present?
+    ENV['ASSETS']
+  end
 end
