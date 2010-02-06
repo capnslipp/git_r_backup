@@ -8,15 +8,6 @@ class GitRBackup
   
   
   def initialize(options)
-    @cache_path = File.join(options[:base], options[:cache])
-    @sub_dir = File.join(@cache_path, options[:sub])
-    @app_path = File.join(options[:base], options[:app]) if options[:app]
-    @assets_path = File.join(options[:base], options[:assets]) if options[:assets]
-    
-    puts "cache dir:\t#{@cache_path.inspect}"
-    puts "sub dir:\t#{@sub_dir.inspect}" if @sub_dir
-    puts "app path:\t#{@app_path.inspect}" if @app_path
-    puts "assets path:\t#{@assets_path.inspect}" if @assets_path
   end
   
   
@@ -33,10 +24,18 @@ protected
     else
       @backup_path = backup_repos_path
     end
+    @backup_cache_repo_dir = File.join(options[:base], options[:cache])
+    @backup_cache_sub_dir = File.join(@cache_path, options[:sub])
+    @app_dir = File.join(options[:base], options[:app]) if options[:app]
+    @app_assets_dir = File.join(options[:base], options[:assets]) if options[:assets]
     
-    @app_data_path = File.join(app_path, 'db', 'data.yml') unless options[:skip_db]
+    @ap_db_dump_path = File.join(@app_dir, 'db', 'data.yml') if @app_dir
     
-    @app_asset_path = File.join([app_path] + [options[:asset_dir]]) if options[:asset_dir]
+    puts "backup cache repo dir:\t#{@backup_cache_repo_dir.inspect}"
+    puts "backup cache sub dir:\t#{@backup_cache_sub_dir.inspect}" if @backup_cache_sub_dir
+    puts "app dir:\t#{@app_dir.inspect}" if @app_dir
+    puts "app assets dir:\t#{@app_assets_dir.inspect}" if @app_assets_dir
+    puts "app db dump path:\t#{@ap_db_dump_path.inspect}" if @ap_db_dump_path
   end
   
   

@@ -33,29 +33,19 @@ namespace :git_r_backup do
   
   
   def base_dir
-    trail_slash(ENV['BASE'] || Dir.pwd)
+    ENV['BASE'] || Dir.pwd
   end
   
   def cache_dir
     raise "CACHE='…' is required" unless ENV['CACHE'].present?
-    trail_slash(ENV['CACHE'])
+    ENV['CACHE']
   end
   
   def sub_dir
-    trail_slash(ENV['SUB']) if ENV['SUB']
+    ENV['SUB'] if ENV['SUB']
   end
   
   def app_dir
-    trail_slash(ENV['APP'] || '.')
-  end
-  
-  def assets_dir
-    raise "ASSETS='…' is required" unless ENV['ASSETS'].present?
-    trail_slash(ENV['ASSETS'])
-  end
-  
-  def trail_slash(dir)
-    return dir if dir[-1, 1] == '/'
-    return "#{dir}/"
+    ENV['APP'] || '.'
   end
 end
