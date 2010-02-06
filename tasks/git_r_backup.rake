@@ -33,7 +33,7 @@ namespace :git_r_backup do
   
   
   def base_dir
-    trail_slash(ENV['BASE'] || `pwd` + '/')
+    trail_slash(ENV['BASE'] || Dir.pwd)
   end
   
   def cache_dir
