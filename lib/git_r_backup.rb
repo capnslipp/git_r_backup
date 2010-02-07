@@ -41,7 +41,7 @@ class GitRBackup
     end
     
     #unless git_repo.log(1).size == 0
-      return if git_repo.status.size == 0 # if there's no changes, no need to commit
+      return if git_repo.status.added.empty? && git_repo.status.changed.empty? && git_repo.status.deleted.empty? # if there's no changes, no need to commit
     #end
     
     date_s = Time.now.strftime '%Y-%m-%d'
@@ -66,7 +66,7 @@ class GitRBackup
     end
       
     #unless git_repo.log(1).size == 0
-      return if git_repo.status.size == 0 # if there's no changes, no need to commit
+      return if git_repo.status.added.empty? && git_repo.status.changed.empty? && git_repo.status.deleted.empty? # if there's no changes, no need to commit
     #end
     
     date_s = Time.now.strftime '%Y-%m-%d'
