@@ -40,6 +40,10 @@ class GitRBackup
       system 'git add -A' # there seems to be no option to do this with Git::Base
     end
     
+    #unless git_repo.log(1).size == 0
+      return if git_repo.status.size == 0 # if there's no changes, no need to commit
+    #end
+    
     date_s = Time.now.strftime '%Y-%m-%d'
     if !@backup_cache_sub
       git_repo.commit_all "automated database backup on #{date_s}"
@@ -60,6 +64,10 @@ class GitRBackup
       
       system 'git add -A' # there seems to be no option to do this with Git::Base
     end
+      
+    #unless git_repo.log(1).size == 0
+      return if git_repo.status.size == 0 # if there's no changes, no need to commit
+    #end
     
     date_s = Time.now.strftime '%Y-%m-%d'
     if !@backup_cache_sub
