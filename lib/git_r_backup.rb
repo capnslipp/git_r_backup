@@ -1,3 +1,7 @@
+require 'rubygems'
+require 'git'
+
+
 class GitRBackup
   VERSION = '1.0.0'
   
@@ -16,6 +20,22 @@ class GitRBackup
   end
   
   
+  def backup_db
+  end
+  
+  
+  def backup_assets
+  end
+  
+  
 protected
+  
+  def git_repo
+    @git_repo ||= if !File.exists?(@backup_cache_repo_dir)
+      Git.init File.expand_path(@backup_cache_repo_dir)
+    else
+      Git.open File.expand_path(@backup_cache_repo_dir)
+    end
+  end
   
 end

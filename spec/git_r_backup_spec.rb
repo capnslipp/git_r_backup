@@ -31,77 +31,133 @@ describe GitRBackup do
   end
   
   
-  describe "correctly required options" do
+  describe "initialization" do
     
-    it "should complain on no args" do
-      lambda {
-        GitRBackup.new({})
-      }.should raise_error
-    end
+    describe "correctly required init options" do
+      
+      it "should complain on no args" do
+        lambda {
+          GitRBackup.new({})
+        }.should raise_error
+      end
+      
+      it "should not complain with standard args" do
+        lambda {
+          GitRBackup.new(std_args)
+        }.should_not raise_error
+      end
+      
+      it "should complain on missing :base arg" do
+        lambda {
+          GitRBackup.new(std_args.except(:base))
+        }.should raise_error
+      end
+      
+      it "should complain on missing :cache arg" do
+        lambda {
+          GitRBackup.new(std_args.except(:cache))
+        }.should raise_error
+      end
+      
+    end # "correctly required init options"
     
-    it "should not complain with standard args" do
-      lambda {
-        GitRBackup.new(std_args)
-      }.should_not raise_error
-    end
     
-    it "should complain on missing :base arg" do
-      lambda {
-        GitRBackup.new(std_args.except(:base))
-      }.should raise_error
-    end
+    describe "correctly inited instance variables" do
+      
+      it "backup_cache_repo_dir" do
+        grb = GitRBackup.new std_args
+        grb.instance_variable_get(:@backup_cache_repo_dir).should == './tmp/backup_cache'
+      end
+      
+      it "backup_cache_sub_dir" do
+        grb = GitRBackup.new std_args
+        grb.instance_variable_get(:@backup_cache_sub_dir).should be_nil
+        
+        grb = GitRBackup.new std_args.merge({:sub => 'servername.appinstance.environment'})
+        # assuming @backup_cache_repo_dir == './tmp/backup_cache'
+        grb.instance_variable_get(:@backup_cache_sub_dir).should == './tmp/backup_cache/servername.appinstance.environment'
+      end
+      
+      it "app_dir" do
+        grb = GitRBackup.new std_args
+        grb.instance_variable_get(:@app_dir).should be_nil
+        
+        grb = GitRBackup.new db_args
+        ['.', './.'].should be_include(grb.instance_variable_get(:@app_dir))
+      end
+      
+      it "app_db_dump_path" do
+        grb = GitRBackup.new std_args
+        grb.instance_variable_get(:@app_db_dump_path).should be_nil
+        
+        grb = GitRBackup.new db_args
+        # assuming @app_dir is '.' or './.'
+        ['./db/data.yml', '././db/data.yml'].should be_include(grb.instance_variable_get(:@app_db_dump_path))
+      end
+      
+      it "assets_dir" do
+        grb = GitRBackup.new std_args
+        grb.instance_variable_get(:@assets_dir).should be_nil
+        
+        grb = GitRBackup.new assets_args
+        grb.instance_variable_get(:@assets_dir).should == './public/assets'
+      end
+      
+    end # "correctly inited instance variables"
     
-    it "should complain on missing :cache arg" do
-      lambda {
-        GitRBackup.new(std_args.except(:cache))
-      }.should raise_error
-    end
-    
-  end
+  end # "initialization"
   
   
-  describe "correct instance variables" do
+  describe "git operations" do
     
-    it "backup_cache_repo_dir" do
-      grb = GitRBackup.new std_args
-      grb.instance_variable_get(:@backup_cache_repo_dir).should == './tmp/backup_cache'
-    end
-    
-    it "backup_cache_sub_dir" do
-      grb = GitRBackup.new std_args
-      grb.instance_variable_get(:@backup_cache_sub_dir).should be_nil
+    describe "without git repo" do
+      before(:all) { @git_repo_dir = 'tmp/spec_fresh_repo' }
       
-      grb = GitRBackup.new std_args.merge({:sub => 'servername.appinstance.environment'})
-      # assuming @backup_cache_repo_dir == './tmp/backup_cache'
-      grb.instance_variable_get(:@backup_cache_sub_dir).should == './tmp/backup_cache/servername.appinstance.environment'
-    end
-    
-    it "app_dir" do
-      grb = GitRBackup.new std_args
-      grb.instance_variable_get(:@app_dir).should be_nil
+      before(:each) do
+        FileUtils.rm_r(@git_repo_dir) if File.exists?(@git_repo_dir)
+      end
       
-      grb = GitRBackup.new db_args
-      ['.', './.'].should be_include(grb.instance_variable_get(:@app_dir))
+      it "should having working 'git_repo()'" do
+        grb = GitRBackup.new std_args.merge({:cache => @git_repo_dir})
+        grb.send :git_repo
+      end
     end
     
-    it "app_db_dump_path" do
-      grb = GitRBackup.new std_args
-      grb.instance_variable_get(:@app_db_dump_path).should be_nil
+    describe "with a stand-alone git repo" do
+      before(:all) { @git_repo_dir = 'tmp/spec_standalone_repo' }
       
-      grb = GitRBackup.new db_args
-      # assuming @app_dir is '.' or './.'
-      ['./db/data.yml', '././db/data.yml'].should be_include(grb.instance_variable_get(:@app_db_dump_path))
-    end
-    
-    it "assets_dir" do
-      grb = GitRBackup.new std_args
-      grb.instance_variable_get(:@assets_dir).should be_nil
+      before(:each) do
+        FileUtils.rm_r(@git_repo_dir) if File.exists?(@git_repo_dir)
+        FileUtils.mkdir_p(@git_repo_dir, :verbose => true)
+        Git.init File.expand_path(@git_repo_dir)
+      end
       
-      grb = GitRBackup.new assets_args
-      grb.instance_variable_get(:@assets_dir).should == './public/assets'
+      it "should having working 'git_repo()'" do
+        grb = GitRBackup.new std_args.merge({:cache => @git_repo_dir})
+        grb.send :git_repo
+      end
     end
     
-  end
+    describe "with a remotely-cloned git repo" do
+      before(:all) { @git_orig_repo_dir = 'tmp/spec_remote_repo'; @git_repo_dir = 'tmp/spec_cloned_repo' }
+      
+      before(:each) do
+        FileUtils.rm_r(@git_orig_repo_dir) if File.exists?(@git_orig_repo_dir)
+        FileUtils.mkdir_p(@git_orig_repo_dir, :verbose => true)
+        Git.init File.expand_path(@git_orig_repo_dir)
+        
+        FileUtils.rm_r(@git_repo_dir) if File.exists?(@git_repo_dir)
+        FileUtils.mkdir_p(@git_repo_dir, :verbose => true)
+        Git.clone File.expand_path(@git_orig_repo_dir), File.expand_path(@git_repo_dir)
+      end
+      
+      it "should having working 'git_repo()'" do
+        grb = GitRBackup.new std_args.merge({:cache => @git_repo_dir})
+        grb.send :git_repo
+      end
+    end
+    
+  end # "git operations"
   
   
 end
