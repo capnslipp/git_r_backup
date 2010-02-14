@@ -8,8 +8,11 @@ namespace :git_r_backup do
       :app => app_dir
     )
     
-    grb.backup_db
-    puts "Backed up database."
+    if grb.backup_db
+      puts "Backed up database."
+    else
+      puts "No backup of database necessary."
+    end
   end
   
   desc "Back up an assets directory."
@@ -21,8 +24,11 @@ namespace :git_r_backup do
       :assets => assets_dir
     )
     
-    grb.backup_assets
-    puts "Backed up assets."
+    if grb.backup_assets
+      puts "Backed up assets."
+    else
+      puts "No backup of assets necessary."
+    end
   end
   
   desc "Back up the database and assets."
@@ -35,11 +41,17 @@ namespace :git_r_backup do
       :assets => assets_dir
     )
     
-    grb.backup_db
-    puts "Backed up database."
+    if grb.backup_db
+      puts "Backed up database."
+    else
+      puts "No backup of database necessary."
+    end
     
-    grb.backup_assets
-    puts "Backed up assets."
+    if grb.backup_assets
+      puts "Backed up assets."
+    else
+      puts "No backup of assets necessary."
+    end
   end
   
   

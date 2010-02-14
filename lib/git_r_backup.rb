@@ -41,7 +41,7 @@ class GitRBackup
     end
     
     begin
-      return if git_repo.status.added.empty? && git_repo.status.changed.empty? && git_repo.status.deleted.empty? # if there's no changes, no need to commit
+      return false if git_repo.status.added.empty? && git_repo.status.changed.empty? && git_repo.status.deleted.empty? # if there's no changes, no need to commit
     rescue Git::GitExecuteError => e
       # If git_repo.status failed, assume that the repo is empty, and continue attempting to add the file(s).
     end
@@ -54,6 +54,8 @@ class GitRBackup
     end
     
     git_repo.push unless git_repo.remotes.empty?
+    
+    return true
   end
   
   
@@ -68,7 +70,7 @@ class GitRBackup
     end
     
     begin
-      return if git_repo.status.added.empty? && git_repo.status.changed.empty? && git_repo.status.deleted.empty? # if there's no changes, no need to commit
+      return false if git_repo.status.added.empty? && git_repo.status.changed.empty? && git_repo.status.deleted.empty? # if there's no changes, no need to commit
     rescue Git::GitExecuteError => e
       # If git_repo.status failed, assume that the repo is empty, and continue attempting to add the file(s).
     end
@@ -81,6 +83,8 @@ class GitRBackup
     end
     
     git_repo.push unless git_repo.remotes.empty?
+    
+    return true
   end
   
   
