@@ -40,9 +40,11 @@ class GitRBackup
       system 'git add -A' # there seems to be no option to do this with Git::Base
     end
     
-    #unless git_repo.log(1).size == 0
+    begin
       return if git_repo.status.added.empty? && git_repo.status.changed.empty? && git_repo.status.deleted.empty? # if there's no changes, no need to commit
-    #end
+    rescue Git::GitExecuteError => e
+      # If git_repo.status failed, assume that the repo is empty, and continue attempting to add the file(s).
+    end
     
     date_s = Time.now.strftime '%Y-%m-%d'
     if !@backup_cache_sub
@@ -64,10 +66,12 @@ class GitRBackup
       
       system 'git add -A' # there seems to be no option to do this with Git::Base
     end
-      
-    #unless git_repo.log(1).size == 0
+    
+    begin
       return if git_repo.status.added.empty? && git_repo.status.changed.empty? && git_repo.status.deleted.empty? # if there's no changes, no need to commit
-    #end
+    rescue Git::GitExecuteError => e
+      # If git_repo.status failed, assume that the repo is empty, and continue attempting to add the file(s).
+    end
     
     date_s = Time.now.strftime '%Y-%m-%d'
     if !@backup_cache_sub
