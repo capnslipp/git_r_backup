@@ -48,9 +48,9 @@ class GitRBackup
     
     date_s = Time.now.strftime '%Y-%m-%d'
     if !@backup_cache_sub
-      git_repo.commit_all "automated database backup on #{date_s}"
+      git_repo.commit_all %<automated database backup on #{date_s}>
     else
-      git_repo.commit_all "automated database backup for '#{@backup_cache_sub}' on #{date_s}"
+      git_repo.commit_all %<automated database backup for "#{@backup_cache_sub}" on #{date_s}>
     end
     
     git_repo.push unless git_repo.remotes.empty?
@@ -77,9 +77,9 @@ class GitRBackup
     
     date_s = Time.now.strftime '%Y-%m-%d'
     if !@backup_cache_sub
-      git_repo.commit_all "automated assets backup on #{date_s}"
+      git_repo.commit_all %<automated assets backup on #{date_s}>
     else
-      git_repo.commit_all "automated assets backup for '#{@backup_cache_sub}' on #{date_s}"
+      git_repo.commit_all %<automated assets backup for "#{@backup_cache_sub}" on #{date_s}>
     end
     
     git_repo.push unless git_repo.remotes.empty?
