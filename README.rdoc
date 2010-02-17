@@ -65,7 +65,7 @@ And pow. Backed up, committed to the repo, and even pushed if the repo has a rem
 
 === Rake Commands
 
-[git_r_backup:db]     Fires off a +rake db:dump+ and backs up the data.yml and schema.rb generated to the CACHE repo.
+[git_r_backup:db]     Fires off a 'rake db:dump' and backs up the data.yml and schema.rb generated to the CACHE repo.
                       * required args: CACHE
                       * optional args: BASE, APP, SUB
 
@@ -73,7 +73,7 @@ And pow. Backed up, committed to the repo, and even pushed if the repo has a rem
                       * required args: CACHE, ASSETS
                       * optional args: BASE, APP, SUB
 
-[git_r_backup:all]    Runs both +git_r_backup:db+ and +git_r_backup:assets+ (in essential, that is).
+[git_r_backup:all]    Runs both 'git_r_backup:db' and 'git_r_backup:assets' (in essential, that is).
                       * required args: CACHE, ASSETS
                       * optional args: BASE, APP, SUB
 
@@ -85,14 +85,14 @@ And pow. Backed up, committed to the repo, and even pushed if the repo has a rem
 [ASSETS]  The filesystem path to the folder containing the assets that need to be backed up.
 
 [BASE]    A path prefix, that if specified, is prepended to the CACHE, APP, and ASSETS paths.
-          * Defaults to the present working directory (+pwd+).
+          * Defaults to the present working directory ('pwd').
 
 [APP]     The directory of the app.
           * Note that rake still needs to be run from the directory of the app, so this is only needed when specifying BASE.
-          * Defaults to the same directory as BASE (+./+).
+          * Defaults to the same directory as BASE ('./').
 
 [SUB]     Creates a sub-folder (or path) inside the Git repository and puts the files in there instead.
-          * Useful if backing up multiple servers/deployments/environments to the same backup repo, or if backing up to the code repo ( _naughty, naughty_ ).
+          * Useful if backing up multiple servers/deployments/environments to the same backup repo, or if backing up to the code repo (naughty, naughty).
 
 
 === Things to Watch Out For
